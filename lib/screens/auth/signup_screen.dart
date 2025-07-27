@@ -346,28 +346,29 @@ class _SignupScreenState extends State<SignupScreen> {
                               ),
                             ),
                             const SizedBox(width: 6),
-                            ElevatedButton(
-                              onPressed: (_otpTimer == 0 && !_fieldsLocked)
-                                  ? _sendOtp
-                                  : null,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.accent,
-                                foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 10,
+                            SizedBox(
+                              width: 120,
+                              child: ElevatedButton(
+                                onPressed: _otpTimer == 0 ? _sendOtp : null,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.accent,
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 10,
+                                  ),
+                                  textStyle: const TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18),
+                                  ),
                                 ),
-                                textStyle: const TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18),
-                                ),
+                                child: _otpTimer > 0
+                                    ? Text('Resend (${_otpTimer}s)')
+                                    : Text(_otpSent ? 'Resend OTP' : 'Get OTP'),
                               ),
-                              child: _otpTimer > 0
-                                  ? Text('Resend (${_otpTimer}s)')
-                                  : Text(_otpSent ? 'Resend OTP' : 'Get OTP'),
                             ),
                           ],
                         ),

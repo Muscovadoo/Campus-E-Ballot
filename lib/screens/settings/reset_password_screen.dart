@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:campus_ballot_voting_system/session.dart';
+import 'package:campus_ballot_voting_system/config/app_router.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   const ResetPasswordScreen({super.key});
@@ -31,12 +32,20 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   Timer? _timer;
 
   Map<String, dynamic>? _findUser() {
+    // Only allow reset for currently logged-in user
+    if (sessionUser == null) {
+      return null;
+    }
+
     final email = _emailController.text.trim();
     final srCode = _srCodeController.text.trim();
     final oldPassword = _oldPasswordController.text;
-    final user = findUserByGsuiteAndSrCode(email, srCode);
-    if (user != null && user['password'] == oldPassword) {
-      return user;
+
+    // Check if the entered credentials match the current session user
+    if (sessionUser!['gsuite'] == email &&
+        sessionUser!['srCode'] == srCode &&
+        sessionUser!['password'] == oldPassword) {
+      return sessionUser;
     }
     return null;
   }
@@ -84,7 +93,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       }
       if (_findUser() == null) {
         setState(() {
-          _error = 'Credentials do not match any account.';
+          _error = 'Credentials do not match to your account.';
           _errorField = 'oldPassword';
         });
         return;
@@ -93,9 +102,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       _otpSent = true;
       _otpValidated = false;
       _startOtpTimer();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('OTP sent: $_generatedOtp (for demo)')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('OTP sent: $_generatedOtp')));
       return;
     }
 
@@ -120,9 +129,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       _error = null;
       _errorField = null;
     });
-    if (_newPasswordController.text.length < 6) {
+    if (_newPasswordController.text.length < 8) {
       setState(() {
-        _error = 'Password must be at least 6 characters';
+        _error = 'Password must be at least 8 characters';
         _errorField = 'newPassword';
       });
       return;
@@ -232,147 +241,185 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
           ),
         ),
         child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 400),
-            child: Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: ListView(
-                shrinkWrap: true,
-                children: [
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Reset Your Password',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 400),
+                child: Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                  const SizedBox(height: 24),
-                  TextField(
-                    controller: _emailController,
-                    enabled: !_otpValidated,
-                    decoration: _inputDecoration('Email', 'email'),
-                    onChanged: (_) => setState(() {}),
-                  ),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: _srCodeController,
-                    enabled: !_otpValidated,
-                    decoration: _inputDecoration('SR-Code', 'srCode'),
-                    onChanged: (_) => setState(() {}),
-                  ),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: _oldPasswordController,
-                    enabled: !_otpValidated,
-                    obscureText: !_showOldPassword,
-                    decoration: _inputDecoration('Old Password', 'oldPassword')
-                        .copyWith(
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _showOldPassword
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                            ),
-                            onPressed: () => setState(
-                              () => _showOldPassword = !_showOldPassword,
-                            ),
-                          ),
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: [
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Reset Your Password',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
                         ),
-                    onChanged: (_) => setState(() {}),
-                  ),
-                  const SizedBox(height: 12),
-                  if (!_otpValidated)
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _otpController,
-                            enabled: _otpSent,
-                            decoration: _inputDecoration('Enter OTP', 'otp'),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        ElevatedButton(
-                          onPressed: _handleOtpButton,
-                          child: Text(
-                            (!_otpSent || _otpTimer == 0)
-                                ? 'Send OTP'
-                                : (_otpTimer > 0 ? 'Validate OTP' : 'Send OTP'),
-                          ),
-                        ),
-                        if (_otpSent && _otpTimer > 0)
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Text(
-                              '$_otpTimer s',
-                              style: const TextStyle(color: Colors.grey),
-                            ),
-                          ),
-                      ],
-                    ),
-                  if (_otpValidated) ...[
-                    const SizedBox(height: 12),
-                    TextField(
-                      controller: _newPasswordController,
-                      obscureText: !_showNewPassword,
-                      decoration:
-                          _inputDecoration(
-                            'New Password',
-                            'newPassword',
-                          ).copyWith(
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _showNewPassword
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                              ),
-                              onPressed: () => setState(
-                                () => _showNewPassword = !_showNewPassword,
-                              ),
-                            ),
-                          ),
-                    ),
-                    const SizedBox(height: 12),
-                    TextField(
-                      controller: _confirmPasswordController,
-                      obscureText: !_showConfirmPassword,
-                      decoration:
-                          _inputDecoration(
-                            'Confirm New Password',
-                            'confirmPassword',
-                          ).copyWith(
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _showConfirmPassword
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
-                              ),
-                              onPressed: () => setState(
-                                () => _showConfirmPassword =
-                                    !_showConfirmPassword,
-                              ),
-                            ),
-                          ),
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: _resetPassword,
-                      child: const Text('Confirm'),
-                    ),
-                  ],
-                  if (_error != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        _error!,
-                        style: const TextStyle(color: Colors.red),
                       ),
-                    ),
-                ],
+                      const SizedBox(height: 24),
+                      TextField(
+                        controller: _emailController,
+                        enabled: !_otpValidated,
+                        decoration: _inputDecoration('Email', 'email'),
+                        onChanged: (_) => setState(() {}),
+                      ),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: _srCodeController,
+                        enabled: !_otpValidated,
+                        decoration: _inputDecoration('SR-Code', 'srCode'),
+                        onChanged: (_) => setState(() {}),
+                      ),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: _oldPasswordController,
+                        enabled: !_otpValidated,
+                        obscureText: !_showOldPassword,
+                        decoration:
+                            _inputDecoration(
+                              'Old Password',
+                              'oldPassword',
+                            ).copyWith(
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _showOldPassword
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                ),
+                                onPressed: () => setState(
+                                  () => _showOldPassword = !_showOldPassword,
+                                ),
+                              ),
+                            ),
+                        onChanged: (_) => setState(() {}),
+                      ),
+                      const SizedBox(height: 12),
+                      if (!_otpValidated)
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: _otpController,
+                                enabled: _otpSent,
+                                decoration: _inputDecoration(
+                                  'Enter OTP',
+                                  'otp',
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            ElevatedButton(
+                              onPressed: _handleOtpButton,
+                              child: Text(
+                                (!_otpSent || _otpTimer == 0)
+                                    ? 'Send OTP'
+                                    : (_otpTimer > 0
+                                          ? 'Validate OTP'
+                                          : 'Send OTP'),
+                              ),
+                            ),
+                            if (_otpSent && _otpTimer > 0)
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text(
+                                  '$_otpTimer s',
+                                  style: const TextStyle(color: Colors.grey),
+                                ),
+                              ),
+                          ],
+                        ),
+                      if (_otpValidated) ...[
+                        const SizedBox(height: 12),
+                        TextField(
+                          controller: _newPasswordController,
+                          obscureText: !_showNewPassword,
+                          decoration:
+                              _inputDecoration(
+                                'New Password',
+                                'newPassword',
+                              ).copyWith(
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _showNewPassword
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                  ),
+                                  onPressed: () => setState(
+                                    () => _showNewPassword = !_showNewPassword,
+                                  ),
+                                ),
+                              ),
+                        ),
+                        const SizedBox(height: 12),
+                        TextField(
+                          controller: _confirmPasswordController,
+                          obscureText: !_showConfirmPassword,
+                          decoration:
+                              _inputDecoration(
+                                'Confirm New Password',
+                                'confirmPassword',
+                              ).copyWith(
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _showConfirmPassword
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                  ),
+                                  onPressed: () => setState(
+                                    () => _showConfirmPassword =
+                                        !_showConfirmPassword,
+                                  ),
+                                ),
+                              ),
+                        ),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: _resetPassword,
+                          child: const Text('Confirm'),
+                        ),
+                      ],
+                      if (_error != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            _error!,
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(
+                                context,
+                              ).pushNamed(AppRouter.forgotPasswordRoute);
+                            },
+                            child: const Text(
+                              'Forgot Password',
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
         ),
       ),

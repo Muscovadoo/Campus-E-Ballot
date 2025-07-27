@@ -102,6 +102,7 @@ class _CandidateViewerScreenState extends State<CandidateViewerScreen> {
   void _showCandidateDetailPopup(BuildContext context, Candidate candidate) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (ctx) => Dialog(
         backgroundColor: Colors.transparent,
         child: Center(
@@ -109,99 +110,132 @@ class _CandidateViewerScreenState extends State<CandidateViewerScreen> {
             widthFactor: 0.85,
             child: Card(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(24),
               ),
               elevation: 8,
               child: Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 24,
+                ),
                 child: Stack(
                   children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.asset(
-                            candidate.imageUrl,
-                            width: 90,
-                            height: 90,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                Container(
-                                  width: 90,
-                                  height: 90,
-                                  color: AppColors.surface,
-                                  child: const Icon(
+                        const SizedBox(height: 8),
+                        // Large circular image placeholder
+                        Center(
+                          child: CircleAvatar(
+                            radius: 48,
+                            backgroundColor: AppColors.primaryLight,
+                            backgroundImage: AssetImage(candidate.imageUrl),
+                            onBackgroundImageError: (_, __) {},
+                            child: candidate.imageUrl.isEmpty
+                                ? const Icon(
                                     Icons.person,
                                     size: 60,
                                     color: AppColors.primary,
-                                  ),
-                                ),
+                                  )
+                                : null,
                           ),
                         ),
-                        const SizedBox(width: 18),
-                        Expanded(
+                        const SizedBox(height: 16),
+                        // Name
+                        Center(
+                          child: Text(
+                            candidate.fullname,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                        // Position
+                        Center(
+                          child: Text(
+                            candidate.position,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 10,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        // Party, Department, Course, Year Level, SR Code
+                        Align(
+                          alignment: Alignment.centerLeft,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                candidate.fullname,
-                                style: AppTextStyles.titleLarge.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primary,
+                                'Party: ${candidate.party}',
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              const SizedBox(height: 6),
-                              Text(
-                                candidate.position,
-                                style: AppTextStyles.bodyLarge.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.onSurface,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                candidate.party,
-                                style: AppTextStyles.bodyMedium.copyWith(
-                                  color: AppColors.secondary,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
                               Text(
                                 'Department: ${candidate.department}',
-                                style: AppTextStyles.bodyMedium,
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                               Text(
                                 'Course: ${candidate.course}',
-                                style: AppTextStyles.bodyMedium,
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                               Text(
                                 'Year Level: ${candidate.yearLevel}',
-                                style: AppTextStyles.bodyMedium,
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                               Text(
                                 'SR Code: ${candidate.srCode}',
-                                style: AppTextStyles.bodyMedium,
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                              const SizedBox(height: 10),
-                              Text(
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        // Manifesto
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
                                 'Manifesto:',
-                                style: AppTextStyles.bodyMedium.copyWith(
+                                style: TextStyle(
+                                  fontSize: 10,
                                   fontWeight: FontWeight.bold,
-                                  color: AppColors.primary,
                                 ),
                               ),
                               Text(
                                 candidate.manifesto,
-                                style: AppTextStyles.bodyMedium.copyWith(
-                                  color: AppColors.onSurface,
-                                ),
+                                style: const TextStyle(fontSize: 10),
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ],
                           ),
                         ),
                       ],
                     ),
+                    // Exit icon (top right)
                     Positioned(
                       top: 0,
                       right: 0,
@@ -209,7 +243,7 @@ class _CandidateViewerScreenState extends State<CandidateViewerScreen> {
                         icon: const Icon(
                           Icons.close,
                           color: AppColors.primary,
-                          size: 28,
+                          size: 32,
                         ),
                         onPressed: () => Navigator.of(ctx).pop(),
                         tooltip: 'Close',
