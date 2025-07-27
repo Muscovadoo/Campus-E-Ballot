@@ -61,6 +61,11 @@ flutter:
     - assets/images/BatstateU-NEU-Logo.png
     - assets/images/SSC-JPLPCMalvar-Logo.png
     - assets/images/Qr-Preview.png
+    - assets/images/candidates/Harvy.jpg
+    - assets/images/candidates/Francis.jpg
+    - assets/images/candidates/Madizon.jpg
+    - assets/images/candidates/Jericho.jpg
+    - assets/images/candidates/hayss.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

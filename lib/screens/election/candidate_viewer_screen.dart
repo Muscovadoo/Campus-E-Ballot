@@ -295,19 +295,19 @@ class _CandidateViewerScreenState extends State<CandidateViewerScreen> {
                 children: [
                   Text(
                     candidate.fullname,
-                    style: AppTextStyles.titleLarge.copyWith(
+                    style: const TextStyle(
+                      fontSize: 15,
                       fontWeight: FontWeight.bold,
                       color: AppColors.primary,
-                      fontSize: 22,
                     ),
                   ),
                   const SizedBox(height: 6),
                   Text(
                     candidate.position,
-                    style: AppTextStyles.bodyLarge.copyWith(
-                      fontWeight: FontWeight.w600,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.normal,
                       color: AppColors.onSurface,
-                      fontSize: 18,
                     ),
                   ),
                 ],

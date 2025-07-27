@@ -817,6 +817,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           enabled: _isEditing,
                           keyboardType: TextInputType.number,
                           maxLength: 2,
+                          style: const TextStyle(fontSize: 11),
                           decoration: InputDecoration(
                             labelText: 'Age',
                             labelStyle: const TextStyle(fontSize: 11),
@@ -827,7 +828,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 : null,
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 10,
-                              vertical: 8,
+                              vertical: 7,
                             ),
                             filled: true,
                             fillColor: Colors.grey[100],
@@ -858,7 +859,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     : Colors.grey,
                               ),
                             ),
-                            hintStyle: TextStyle(color: Colors.grey),
+                            hintStyle: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 11,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -875,7 +879,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       fontSize: 11,
                                       color: _isEditing
                                           ? Colors.black
-                                          : Colors.grey, // <-- This line
+                                          : Colors.grey,
                                       fontWeight: FontWeight.normal,
                                     ),
                                   ),
@@ -900,7 +904,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 10,
-                              vertical: 8,
+                              vertical: 7,
                             ),
                             errorText:
                                 _attemptedSave &&
@@ -940,7 +944,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     : Colors.grey,
                               ),
                             ),
-                            hintStyle: TextStyle(color: Colors.grey),
+                            hintStyle: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 11,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -980,7 +987,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 10,
-                              vertical: 8,
+                              vertical: 7,
                             ),
                             errorText:
                                 _attemptedSave &&
@@ -1020,7 +1027,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     : Colors.grey,
                               ),
                             ),
-                            hintStyle: TextStyle(color: Colors.grey),
+                            hintStyle: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 11,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -1046,6 +1056,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: AbsorbPointer(
                             child: TextFormField(
                               enabled: _isEditing,
+                              style: const TextStyle(fontSize: 11),
                               controller: TextEditingController(
                                 text: _selectedBirthday != null
                                     ? '${_selectedBirthday!.day}/${_selectedBirthday!.month}/${_selectedBirthday!.year}'
@@ -1056,7 +1067,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 labelStyle: const TextStyle(fontSize: 11),
                                 contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 10,
-                                  vertical: 8,
+                                  vertical: 7,
                                 ),
                                 suffixIcon: const Icon(
                                   Icons.calendar_today,
@@ -1095,7 +1106,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         : Colors.grey,
                                   ),
                                 ),
-                                hintStyle: TextStyle(color: Colors.grey),
+                                hintStyle: const TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 11,
+                                ),
                               ),
                             ),
                           ),
@@ -1107,6 +1121,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           enabled: _isEditing,
                           keyboardType: TextInputType.phone,
                           maxLength: 11,
+                          style: const TextStyle(fontSize: 11),
                           decoration: InputDecoration(
                             labelText: 'Contact Number',
                             labelStyle: const TextStyle(fontSize: 11),
@@ -1127,7 +1142,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 : null,
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 10,
-                              vertical: 8,
+                              vertical: 7,
                             ),
                             filled: true,
                             fillColor: Colors.grey[100],
@@ -1185,7 +1200,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     : Colors.grey,
                               ),
                             ),
-                            hintStyle: TextStyle(color: Colors.grey),
+                            hintStyle: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 11,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -1193,12 +1211,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         TextFormField(
                           controller: _fNameController,
                           enabled: _isEditing,
+                          style: const TextStyle(fontSize: 11),
                           decoration: InputDecoration(
                             labelText: 'First Name',
                             labelStyle: const TextStyle(fontSize: 11),
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 10,
-                              vertical: 8,
+                              vertical: 7,
                             ),
                             filled: true,
                             fillColor: Colors.grey[100],
@@ -1229,7 +1248,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     : Colors.grey,
                               ),
                             ),
-                            hintStyle: TextStyle(color: Colors.grey),
+                            hintStyle: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 11,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -1237,6 +1259,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         TextFormField(
                           controller: _mNameController,
                           enabled: _isEditing,
+                          style: const TextStyle(fontSize: 11),
                           inputFormatters: [
                             LengthLimitingTextInputFormatter(1),
                             FilteringTextInputFormatter.allow(RegExp(r'[A-Z]')),
@@ -1246,7 +1269,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             labelStyle: const TextStyle(fontSize: 11),
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 10,
-                              vertical: 8,
+                              vertical: 7,
                             ),
                             filled: true,
                             fillColor: Colors.grey[100],
@@ -1277,7 +1300,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     : Colors.grey,
                               ),
                             ),
-                            hintStyle: TextStyle(color: Colors.grey),
+                            hintStyle: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 11,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -1285,12 +1311,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         TextFormField(
                           controller: _lNameController,
                           enabled: _isEditing,
+                          style: const TextStyle(fontSize: 11),
                           decoration: InputDecoration(
                             labelText: 'Last Name',
                             labelStyle: const TextStyle(fontSize: 11),
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 10,
-                              vertical: 8,
+                              vertical: 7,
                             ),
                             filled: true,
                             fillColor: Colors.grey[100],
@@ -1321,18 +1348,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     : Colors.grey,
                               ),
                             ),
-                            hintStyle: TextStyle(color: Colors.grey),
+                            hintStyle: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 11,
+                            ),
                           ),
                         ), // SR Code (not editable)
                         TextFormField(
                           controller: _srCodeController,
                           enabled: false,
+                          style: const TextStyle(fontSize: 11),
                           decoration: InputDecoration(
                             labelText: 'SR Code',
                             labelStyle: const TextStyle(fontSize: 11),
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 10,
-                              vertical: 8,
+                              vertical: 7,
                             ),
                             filled: true,
                             fillColor: Colors.grey[100],
@@ -1345,7 +1376,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             focusedBorder: const OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.grey),
                             ),
-                            hintStyle: TextStyle(color: Colors.grey),
+                            hintStyle: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 11,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -1392,7 +1426,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 10,
-                              vertical: 8,
+                              vertical: 7,
                             ),
                             errorText:
                                 _attemptedSave &&
@@ -1428,7 +1462,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     : Colors.grey,
                               ),
                             ),
-                            hintStyle: TextStyle(color: Colors.grey),
+                            hintStyle: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 11,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -1470,7 +1507,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 10,
-                              vertical: 8,
+                              vertical: 7,
                             ),
                             errorText:
                                 _attemptedSave &&
@@ -1506,7 +1543,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     : Colors.grey,
                               ),
                             ),
-                            hintStyle: TextStyle(color: Colors.grey),
+                            hintStyle: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 11,
+                            ),
                           ),
                         ),
                       ],

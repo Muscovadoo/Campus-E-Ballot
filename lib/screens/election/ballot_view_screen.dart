@@ -17,7 +17,9 @@ class _BallotViewScreenState extends State<BallotViewScreen> {
   bool _showIncompleteError = false;
 
   bool isProfileComplete(Map<String, dynamic> user) {
-    return user['fullName']?.isNotEmpty == true &&
+    return user['FName']?.isNotEmpty == true &&
+        user['LName']?.isNotEmpty == true &&
+        user['MName']?.isNotEmpty == true &&
         user['srCode']?.isNotEmpty == true &&
         user['department']?.isNotEmpty == true &&
         user['course']?.isNotEmpty == true &&
