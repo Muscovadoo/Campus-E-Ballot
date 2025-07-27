@@ -49,12 +49,12 @@ class VoteSubmittedScreen extends StatelessWidget {
                 children: [
                   Image.asset(
                     'assets/images/BatstateU-NEU-Logo.png',
-                    height: 80,
+                    height: 110,
                   ),
                   const SizedBox(width: 16),
                   Image.asset(
                     'assets/images/SSC-JPLPCMalvar-Logo.png',
-                    height: 80,
+                    height: 110,
                   ),
                 ],
               ),

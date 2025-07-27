@@ -16,12 +16,13 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _fNameController = TextEditingController();
+  final TextEditingController _mNameController = TextEditingController();
+  final TextEditingController _lNameController = TextEditingController();
   final TextEditingController _gsuiteController = TextEditingController();
   final TextEditingController _srCodeController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
   final TextEditingController _otpController = TextEditingController();
 
   bool _obscurePassword = true;
@@ -35,7 +36,9 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   void dispose() {
-    _fullNameController.dispose();
+    _fNameController.dispose();
+    _mNameController.dispose();
+    _lNameController.dispose();
     _gsuiteController.dispose();
     _srCodeController.dispose();
     _passwordController.dispose();
@@ -46,7 +49,9 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   void _clearFields() {
-    _fullNameController.clear();
+    _fNameController.clear();
+    _mNameController.clear();
+    _lNameController.clear();
     _gsuiteController.clear();
     _srCodeController.clear();
     _passwordController.clear();
@@ -76,18 +81,53 @@ class _SignupScreenState extends State<SignupScreen> {
   bool _validateFields({bool showErrors = true}) {
     Map<String, String?> errors = {};
     bool valid = true;
-    if (_fullNameController.text.trim().isEmpty) {
-      errors['fullname'] = 'Full name is required';
+    if (_fNameController.text.trim().isEmpty) {
+      errors['fname'] = 'First name is required';
+      valid = false;
+    }
+    if (_mNameController.text.trim().isEmpty) {
+      errors['mname'] = 'Middle name is required';
+      valid = false;
+    } else if (!RegExp(r'^[A-Z]$').hasMatch(_mNameController.text.trim()) || _mNameController.text.trim().length > 1) {
+    errors['mname'] = 'Must be a single uppercase letter (A-Z)';
+    valid = false;
+    }
+
+    if (_lNameController.text.trim().isEmpty) {
+      errors['lname'] = 'Last name is required';
       valid = false;
     }
     if (!_gsuiteController.text.trim().endsWith('@g.batstate-u.edu.ph')) {
       errors['gsuite'] = 'Enter a valid Gsuite (@g.batstate-u.edu.ph)';
       valid = false;
+    } else if (tempUserStore.containsKey(_gsuiteController.text.trim()) ||
+      predefinedUsers.any((u) => u['gsuite'] == _gsuiteController.text.trim())) {
+    errors['gsuite'] = 'This GSuite is already registered';
+    valid = false;
     }
+
     if (_srCodeController.text.trim().isEmpty) {
       errors['srcode'] = 'SR-Code is required';
       valid = false;
+    } else if (!RegExp(r'^(2[2-9])-[0-9]{5}$').hasMatch(_srCodeController.text.trim())) {
+      errors['srcode'] = 'Must be in the format 22-12345';
+      valid = false;
+    } else if (tempUserStore.containsKey(_srCodeController.text.trim()) ||
+      predefinedUsers.any((u) => u['srCode'] == _srCodeController.text.trim())) {
+      errors['srcode'] = 'This SR-Code is already registered';
+      valid = false;
     }
+
+    final srCode = _srCodeController.text.trim();
+    final gsuite = _gsuiteController.text.trim();
+    if (gsuite.isNotEmpty && srCode.isNotEmpty) {
+      final expectedPrefix = srCode;
+      if (!gsuite.startsWith(expectedPrefix)) {
+        errors['gsuite'] = 'Must be $expectedPrefix@g.batstate-u.edu.ph';
+        valid = false;
+      }
+    }
+  
     if (_passwordController.text.isEmpty) {
       errors['password'] = 'Password is required';
       valid = false;
@@ -154,7 +194,9 @@ class _SignupScreenState extends State<SignupScreen> {
     final user = {
       'gsuite': _gsuiteController.text.trim(),
       'password': _passwordController.text.trim(),
-      'fullName': _fullNameController.text.trim(),
+      'FName': _fNameController.text.trim(),
+      'MName': _mNameController.text.trim(),
+      'LName': _lNameController.text.trim(),
       'srCode': _srCodeController.text.trim(),
     };
     registerUser(user);
@@ -214,15 +256,15 @@ class _SignupScreenState extends State<SignupScreen> {
                   children: [
                     Image.asset(
                       'assets/images/BatstateU-NEU-Logo.png',
-                      height: 90,
-                      width: 90,
+                      height: 110,
+                      width: 110,
                       fit: BoxFit.contain,
                     ),
                     const SizedBox(width: 20),
                     Image.asset(
                       'assets/images/SSC-JPLPCMalvar-Logo.png',
-                      height: 90,
-                      width: 90,
+                      height: 110,
+                      width: 110,
                       fit: BoxFit.contain,
                     ),
                   ],
@@ -253,14 +295,22 @@ class _SignupScreenState extends State<SignupScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 12),
                         TextFormField(
-                          controller: _fullNameController,
+                          controller: _fNameController,
                           enabled: !_fieldsLocked,
-                          decoration: _inputDecoration(
-                            'Fullname (Ex. Juan A. Dela Cruz)',
-                            'fullname',
-                          ),
+                          decoration: _inputDecoration('First Name', 'fname'),
+                        ),
+                        const SizedBox(height: 14),
+                        TextFormField(
+                          controller: _mNameController,
+                          enabled: !_fieldsLocked,
+                          decoration: _inputDecoration('Middle Name', 'mname'),
+                        ),
+                        const SizedBox(height: 14),
+                        TextFormField(
+                          controller: _lNameController,
+                          enabled: !_fieldsLocked,
+                          decoration: _inputDecoration('Last Name', 'lname'),
                         ),
                         const SizedBox(height: 14),
                         TextFormField(

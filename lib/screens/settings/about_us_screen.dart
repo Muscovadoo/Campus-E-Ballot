@@ -89,14 +89,14 @@ The SSC's "continuous pursuit of excellence and transparency" is central to thei
                     children: [
                       Image.asset(
                         'assets/images/BatstateU-NEU-Logo.png',
-                        height: 90,
-                        width: 90,
+                        height: 110,
+                        width: 110,
                       ),
                       const SizedBox(width: 10),
                       Image.asset(
                         'assets/images/SSC-JPLPCMalvar-Logo.png',
-                        height: 90,
-                        width: 90,
+                        height: 110,
+                        width: 110,
                       ),
                     ],
                   ),

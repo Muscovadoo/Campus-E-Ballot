@@ -55,7 +55,19 @@ class VoteConfirmationScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    'Voter: ${user['fullName'] ?? ''} (${user['srCode'] ?? ''})',
+                    // Compose full name as in profile_screen.dart: FName + middle initial + LName
+                    (() {
+                      final fName = user['FName'] ?? user['firstName'] ?? '';
+                      final mName = user['MName'] ?? user['middleName'] ?? '';
+                      final lName = user['LName'] ?? user['lastName'] ?? '';
+                      String middleInitial = '';
+                      if (mName.trim().isNotEmpty) {
+                        middleInitial = ' ${mName.trim()[0]}.';
+                      }
+                      final fullName = '$fName$middleInitial $lName'.trim();
+                      final srCode = user['srCode'] ?? '';
+                      return 'Voter: $fullName (${srCode.isNotEmpty ? srCode : 'N/A'})';
+                    })(),
                   ),
                   Text('GSuite: ${user['gsuite'] ?? ''}'),
                   const SizedBox(height: 16),

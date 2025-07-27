@@ -85,15 +85,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     Image.asset(
                       'assets/images/BatstateU-NEU-Logo.png',
-                      height: 90,
-                      width: 90,
+                      height: 110,
+                      width: 110,
                       fit: BoxFit.contain,
                     ),
                     const SizedBox(width: 20),
                     Image.asset(
                       'assets/images/SSC-JPLPCMalvar-Logo.png',
-                      height: 90,
-                      width: 90,
+                      height: 110,
+                      width: 110,
                       fit: BoxFit.contain,
                     ),
                   ],

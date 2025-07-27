@@ -35,14 +35,14 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                 children: [
                   Image.asset(
                     'assets/images/BatStateU-NEU-Logo.png',
-                    height: 80,
-                    width: 80,
+                    height: 110,
+                    width: 110,
                   ),
                   const SizedBox(width: 18),
                   Image.asset(
                     'assets/images/SSC-JPLPCMalvar-Logo.png',
-                    height: 80,
-                    width: 80,
+                    height: 110,
+                    width: 110,
                   ),
                 ],
               ),
@@ -59,7 +59,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
               const SizedBox(height: 10),
               if (vrn.isNotEmpty)
                 Text(
-                  'Vote Reference Number (VRN): ${vrn}',
+                  'Vote Reference Number: ${vrn}',
                   style: TextStyle(
                     fontSize: 18,
                     color: Colors.black,
@@ -67,16 +67,6 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-              const SizedBox(height: 18),
-              const Text(
-                'You can only vote once per GSuite Account',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                ),
-                textAlign: TextAlign.center,
-              ),
               const SizedBox(height: 28),
               SizedBox(
                 width: double.infinity,
@@ -106,61 +96,6 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
     );
   }
 
-  void _generateIdCard() {
-    final user = sessionUser ?? {};
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 24),
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Use the updated ID card widget from profile_screen.dart, but keep the rest of the logic and elements
-              IdCardWidget(user: user),
-              const SizedBox(height: 22),
-              SizedBox(
-                width: 240,
-                height: 52,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          'Copy sent to your GSuite email',
-                          style: AppTextStyles.bodyMedium.copyWith(
-                            color: AppColors.onPrimary,
-                          ),
-                        ),
-                        backgroundColor: AppColors.success,
-                        duration: const Duration(seconds: 3),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.redAccent,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    textStyle: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
-                  ),
-                  child: const Text('Print a Copy'),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   void _showIdCardDialog() {
     final user = sessionUser ?? {};
     showDialog(
@@ -178,7 +113,9 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
               SizedBox(
                 width: 240,
                 height: 52,
-                child: ElevatedButton(
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.print, color: Colors.white),
+                  label: const Text('Print a Copy'),
                   onPressed: () {
                     Navigator.of(context).pop();
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -195,7 +132,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.redAccent,
+                    backgroundColor: Colors.green,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
@@ -205,7 +142,6 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
                       fontSize: 20,
                     ),
                   ),
-                  child: const Text('Print a Copy'),
                 ),
               ),
             ],

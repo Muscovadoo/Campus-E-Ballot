@@ -6,6 +6,7 @@ import 'package:campus_ballot_voting_system/theme/app_text_styles.dart';
 import 'package:campus_ballot_voting_system/widgets/custom_button.dart';
 import 'package:campus_ballot_voting_system/widgets/text_input_field.dart';
 import 'package:campus_ballot_voting_system/session.dart';
+import 'package:flutter/services.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -22,7 +23,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final _confirmPasswordController = TextEditingController();
   final _courseController = TextEditingController();
   final _yearLevelController = TextEditingController();
-  final _fullNameController = TextEditingController();
+  final _fNameController = TextEditingController();
+  final _mNameController = TextEditingController();
+  final _lNameController = TextEditingController();
   final _srCodeController = TextEditingController();
 
   String? _selectedDepartment;
@@ -82,7 +85,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _loadUserData();
     _courseController.text = sessionUser?['course'] ?? '';
     _yearLevelController.text = sessionUser?['yearLevel'] ?? '';
-    _fullNameController.text = sessionUser?['fullName'] ?? '';
+    _fNameController.text = sessionUser?['FName'] ?? '';
+    _mNameController.text = sessionUser?['MName'] ?? '';
+    _lNameController.text = sessionUser?['LName'] ?? '';
     _srCodeController.text = sessionUser?['srCode'] ?? '';
   }
 
@@ -97,6 +102,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _selectedBirthday = sessionUser!['birthday'] != null
           ? DateTime.parse(sessionUser!['birthday'].toString())
           : null;
+      _fNameController.text = sessionUser?['FName'] ?? '';
+      _mNameController.text = sessionUser?['MName'] ?? '';
+      _lNameController.text = sessionUser?['LName'] ?? '';
       _isProfileSaved = sessionUser!['profileSaved'] == 'true';
       _userImagePath = sessionUser!['profileImage']?.toString();
     }
@@ -110,7 +118,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _confirmPasswordController.dispose();
     _courseController.dispose();
     _yearLevelController.dispose();
-    _fullNameController.dispose();
+    _fNameController.dispose();
+    _mNameController.dispose();
+    _lNameController.dispose();
     _srCodeController.dispose();
     super.dispose();
   }
@@ -132,9 +142,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // Validation logic
     bool hasError = false;
     String? errorMsg;
-    if (_fullNameController.text.trim().isEmpty) {
+    if (_fNameController.text.trim().isEmpty) {
       hasError = true;
-      errorMsg = 'Full Name is required.';
+      errorMsg = 'First Name is required.';
+    } else if (_mNameController.text.trim().isEmpty) {
+      hasError = true;
+      errorMsg = 'Middle Name is required.';
+    } else if (!RegExp(r'^[A-Z]$').hasMatch(_mNameController.text.trim())) {
+      hasError = true;
+      errorMsg = 'Middle name must be a single uppercase letter (A-Z)';
+    } else if (_lNameController.text.trim().isEmpty) {
+      hasError = true;
+      errorMsg = 'Last Name is required.';
     } else if (_ageController.text.trim().isEmpty) {
       hasError = true;
       errorMsg = 'Age is required.';
@@ -191,7 +210,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             'profileImage': _userImagePath ?? '',
             'course': _courseController.text,
             'yearLevel': _yearLevelController.text,
-            'fullName': _fullNameController.text,
+            'FName': _fNameController.text,
+            'MName': _mNameController.text,
+            'LName': _lNameController.text,
             'srCode': _srCodeController.text,
           };
           updateCurrentUserProfile(updatedFields);
@@ -422,13 +443,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         // Last name
                         Text(
                           (() {
-                            final last =
-                                (user['fullName'] ?? '').split(' ').isNotEmpty
-                                ? (user['fullName'] ?? '').split(' ').last
-                                : '';
-                            return last.length > 15
-                                ? last.substring(0, 15)
-                                : last;
+                            final lName = user['LName'] ?? '';
+                            return lName.length > 15
+                                ? lName.substring(0, 15)
+                                : lName;
                           })(),
                           style:
                               AppTextStyles.headlineLarge?.copyWith(
@@ -436,25 +454,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
                                 letterSpacing: 1.4,
+                                fontFamily: 'Etna',
                               ) ??
                               const TextStyle(
                                 fontSize: 40,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
                                 letterSpacing: 1.4,
+                                fontFamily: 'Etna',
                               ),
                           textAlign: TextAlign.center,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        // Full name
+                        // Full name (First Name + Middle Initial.)
                         Text(
                           (() {
-                            final parts = (user['fullName'] ?? '').split(' ');
-                            if (parts.length > 1) {
-                              return parts.take(parts.length - 1).join(' ');
+                            final fName = user['FName'] ?? '';
+                            final mName = user['MName'] ?? '';
+                            String middleInitial = '';
+                            if (mName.trim().isNotEmpty) {
+                              middleInitial = ' ${mName.trim()[0]}.';
                             }
-                            return user['fullName'] ?? '';
+                            return '$fName$middleInitial';
                           })(),
                           style: const TextStyle(
                             fontSize: 20,
@@ -625,48 +647,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  String _getLastName(String fullName) {
-    final parts = fullName.split(' ');
-    return parts.isNotEmpty ? parts.last : '';
-  }
-
-  String _getFirstName(String fullName) {
-    final parts = fullName.split(' ');
-    if (parts.length > 1) {
-      return parts.take(parts.length - 1).join(' ');
-    }
-    return fullName;
-  }
-
-  Widget _buildIdInfoRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 80,
-            child: Text(
-              '$label:',
-              style: AppTextStyles.bodySmall.copyWith(
-                color: AppColors.primary,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: AppTextStyles.bodySmall.copyWith(
-                color: AppColors.onSurface,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -889,7 +869,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               .map(
                                 (dept) => DropdownMenuItem(
                                   value: dept,
-                                  child: Text(dept),
+                                  child: Text(
+                                    dept,
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: _isEditing
+                                          ? Colors.black
+                                          : Colors.grey, // <-- This line
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ),
                                 ),
                               )
                               .toList(),
@@ -904,7 +893,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               : null,
                           decoration: InputDecoration(
                             labelText: 'Department',
-                            labelStyle: const TextStyle(fontSize: 11),
+                            labelStyle: TextStyle(
+                              fontSize: 11,
+                              color: _isEditing ? Colors.black : Colors.grey,
+                              fontWeight: FontWeight.normal,
+                            ),
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 10,
                               vertical: 8,
@@ -958,7 +951,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               .map(
                                 (sex) => DropdownMenuItem(
                                   value: sex,
-                                  child: Text(sex),
+                                  child: Text(
+                                    sex,
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: _isEditing
+                                          ? Colors.black
+                                          : Colors.grey,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ),
                                 ),
                               )
                               .toList(),
@@ -971,7 +973,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               : null,
                           decoration: InputDecoration(
                             labelText: 'Sex',
-                            labelStyle: const TextStyle(fontSize: 11),
+                            labelStyle: TextStyle(
+                              fontSize: 11,
+                              color: _isEditing ? Colors.black : Colors.grey,
+                              fontWeight: FontWeight.normal,
+                            ),
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 10,
                               vertical: 8,
@@ -1183,12 +1189,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        // Full Name
+                        // First Name
                         TextFormField(
-                          controller: _fullNameController,
+                          controller: _fNameController,
                           enabled: _isEditing,
                           decoration: InputDecoration(
-                            labelText: 'Full Name',
+                            labelText: 'First Name',
                             labelStyle: const TextStyle(fontSize: 11),
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 10,
@@ -1200,7 +1206,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               borderSide: BorderSide(
                                 color:
                                     _attemptedSave &&
-                                        _fullNameController.text.trim().isEmpty
+                                        _fNameController.text.trim().isEmpty
                                     ? Colors.red
                                     : Colors.grey,
                               ),
@@ -1209,7 +1215,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               borderSide: BorderSide(
                                 color:
                                     _attemptedSave &&
-                                        _fullNameController.text.trim().isEmpty
+                                        _fNameController.text.trim().isEmpty
                                     ? Colors.red
                                     : Colors.grey,
                               ),
@@ -1218,7 +1224,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               borderSide: BorderSide(
                                 color:
                                     _attemptedSave &&
-                                        _fullNameController.text.trim().isEmpty
+                                        _fNameController.text.trim().isEmpty
                                     ? Colors.red
                                     : Colors.grey,
                               ),
@@ -1227,7 +1233,97 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        // SR Code (not editable)
+                        // Middle Name
+                        TextFormField(
+                          controller: _mNameController,
+                          enabled: _isEditing,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(1),
+                            FilteringTextInputFormatter.allow(RegExp(r'[A-Z]')),
+                          ],
+                          decoration: InputDecoration(
+                            labelText: 'Middle Name',
+                            labelStyle: const TextStyle(fontSize: 11),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 8,
+                            ),
+                            filled: true,
+                            fillColor: Colors.grey[100],
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color:
+                                    _attemptedSave &&
+                                        _mNameController.text.trim().isEmpty
+                                    ? Colors.red
+                                    : Colors.grey,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color:
+                                    _attemptedSave &&
+                                        _mNameController.text.trim().isEmpty
+                                    ? Colors.red
+                                    : Colors.grey,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color:
+                                    _attemptedSave &&
+                                        _mNameController.text.trim().isEmpty
+                                    ? Colors.red
+                                    : Colors.grey,
+                              ),
+                            ),
+                            hintStyle: TextStyle(color: Colors.grey),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        // Last Name
+                        TextFormField(
+                          controller: _lNameController,
+                          enabled: _isEditing,
+                          decoration: InputDecoration(
+                            labelText: 'Last Name',
+                            labelStyle: const TextStyle(fontSize: 11),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 8,
+                            ),
+                            filled: true,
+                            fillColor: Colors.grey[100],
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color:
+                                    _attemptedSave &&
+                                        _lNameController.text.trim().isEmpty
+                                    ? Colors.red
+                                    : Colors.grey,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color:
+                                    _attemptedSave &&
+                                        _lNameController.text.trim().isEmpty
+                                    ? Colors.red
+                                    : Colors.grey,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color:
+                                    _attemptedSave &&
+                                        _lNameController.text.trim().isEmpty
+                                    ? Colors.red
+                                    : Colors.grey,
+                              ),
+                            ),
+                            hintStyle: TextStyle(color: Colors.grey),
+                          ),
+                        ), // SR Code (not editable)
                         TextFormField(
                           controller: _srCodeController,
                           enabled: false,
@@ -1266,7 +1362,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     .map(
                                       (course) => DropdownMenuItem(
                                         value: course,
-                                        child: Text(course),
+                                        child: Text(
+                                          course,
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            color: _isEditing
+                                                ? Colors.black
+                                                : Colors.grey,
+                                            fontWeight: FontWeight.normal,
+                                          ),
+                                        ),
                                       ),
                                     )
                                     .toList()
@@ -1280,7 +1385,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               : null,
                           decoration: InputDecoration(
                             labelText: 'Course',
-                            labelStyle: const TextStyle(fontSize: 11),
+                            labelStyle: TextStyle(
+                              fontSize: 11,
+                              color: _isEditing ? Colors.black : Colors.grey,
+                              fontWeight: FontWeight.normal,
+                            ),
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 10,
                               vertical: 8,
@@ -1332,7 +1441,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               .map(
                                 (year) => DropdownMenuItem(
                                   value: year,
-                                  child: Text(year),
+                                  child: Text(
+                                    year,
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      color: _isEditing
+                                          ? Colors.black
+                                          : Colors.grey,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                  ),
                                 ),
                               )
                               .toList(),
@@ -1345,7 +1463,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               : null,
                           decoration: InputDecoration(
                             labelText: 'Year Level',
-                            labelStyle: const TextStyle(fontSize: 11),
+                            labelStyle: TextStyle(
+                              fontSize: 11,
+                              color: _isEditing ? Colors.black : Colors.grey,
+                              fontWeight: FontWeight.normal,
+                            ),
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 10,
                               vertical: 8,
@@ -1710,10 +1832,8 @@ class IdCardWidget extends StatelessWidget {
           // Last name
           Text(
             (() {
-              final last = (user['fullName'] ?? '').split(' ').isNotEmpty
-                  ? (user['fullName'] ?? '').split(' ').last
-                  : '';
-              return last.length > 15 ? last.substring(0, 15) : last;
+              final lName = user['LName'] ?? '';
+              return lName.length > 15 ? lName.substring(0, 15) : lName;
             })(),
             style:
                 AppTextStyles.headlineLarge?.copyWith(
@@ -1721,25 +1841,29 @@ class IdCardWidget extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                   letterSpacing: 1.4,
+                  fontFamily: 'Etna',
                 ) ??
                 const TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                   letterSpacing: 1.4,
+                  fontFamily: 'Etna',
                 ),
             textAlign: TextAlign.center,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-          // Full name
+          // First Name + Middle Initial.
           Text(
             (() {
-              final parts = (user['fullName'] ?? '').split(' ');
-              if (parts.length > 1) {
-                return parts.take(parts.length - 1).join(' ');
+              final fName = user['FName'] ?? '';
+              final mName = user['MName'] ?? '';
+              String middleInitial = '';
+              if (mName.trim().isNotEmpty) {
+                middleInitial = ' ${mName.trim()[0]}.';
               }
-              return user['fullName'] ?? '';
+              return '$fName$middleInitial';
             })(),
             style: const TextStyle(
               fontSize: 20,
