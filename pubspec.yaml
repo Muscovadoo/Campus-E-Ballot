@@ -61,11 +61,58 @@ flutter:
     - assets/images/BatstateU-NEU-Logo.png
     - assets/images/SSC-JPLPCMalvar-Logo.png
     - assets/images/Qr-Preview.png
+    - assets/images/candidate_placeholder.png
     - assets/images/candidates/Harvy.jpg
     - assets/images/candidates/Francis.jpg
     - assets/images/candidates/Madizon.jpg
     - assets/images/candidates/Jericho.jpg
-    - assets/images/candidates/hayss.jpg
+    - assets/images/candidates/Ashley.jpg
+    - assets/images/candidates/BossJame.jpg
+    - assets/images/candidates/Vherra.jpg
+    - assets/images/candidates/Patrick.jpg
+    - assets/images/candidates/Ariessa.jpg
+    - assets/images/candidates/Margie.jpg
+    - assets/images/candidates/Jenny.jpg
+    - assets/images/candidates/Mendoza.jpg
+    - assets/images/candidates/Kurt.jpg
+    - assets/images/candidates/Niniela.jpg
+    - assets/images/candidates/Lucas.jpg
+    - assets/images/candidates/Shaina.jpg
+    - assets/images/candidates/Rachel.jpg
+    - assets/images/candidates/Kenneth.jpg
+    - assets/images/candidates/Andrew.jpg
+    - assets/images/candidates/Charlotte.jpg
+    - assets/images/candidates/Jhona.jpg
+    - assets/images/candidates/Nora.jpg
+    - assets/images/candidates/Paul.jpg
+    - assets/images/candidates/Kisha.jpg
+    - assets/images/candidates/Mark.jpg
+    - assets/images/candidates/Kerzy.jpg
+    - assets/images/candidates/Aeon.jpg
+    - assets/images/candidates/Aldrey.jpg
+    - assets/images/candidates/Zoey.jpg
+    - assets/images/candidates/Harper.jpg
+    - assets/images/candidates/Catena.jpg
+    - assets/images/candidates/Jay.jpg
+    - assets/images/candidates/Evelyn.jpg
+    - assets/images/candidates/Victoria.jpg
+    - assets/images/candidates/Dominic.jpg
+    - assets/images/candidates/Neil.jpg
+    - assets/images/candidates/Aly.jpg
+    - assets/images/candidates/Scarlet.jpg
+    - assets/images/candidates/Joseph.jpg
+    - assets/images/candidates/Julian.jpg
+    - assets/images/candidates/Elizabeth.jpg
+    - assets/images/candidates/Denver.jpg
+    - assets/images/candidates/Samuel.jpg
+    - assets/images/candidates/Leo.jpg
+    - assets/images/candidates/Sofia.jpg
+    - assets/images/candidates/Luna.jpg
+    - assets/images/candidates/Ethan.jpg
+    - assets/images/candidates/Aria.jpg
+    - assets/images/candidates/Edgar.jpg
+    - assets/images/candidates/Sheena.jpg
+    - assets/images/candidates/Chloe.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

@@ -103,7 +103,16 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   ),
                   const SizedBox(height: 4),
                   TextFormField(
-                    initialValue: user?['fullName'] ?? '',
+                    initialValue: (() {
+                      final fName = user?['FName'] ?? user?['firstName'] ?? '';
+                      final mName = user?['MName'] ?? user?['middleName'] ?? '';
+                      final lName = user?['LName'] ?? user?['lastName'] ?? '';
+                      String middleInitial = '';
+                      if (mName.trim().isNotEmpty) {
+                        middleInitial = ' ${mName.trim()[0]}.';
+                      }
+                      return '$fName$middleInitial $lName'.trim();
+                    })(),
                     enabled: false,
                     decoration: InputDecoration(
                       filled: true,

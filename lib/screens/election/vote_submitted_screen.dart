@@ -33,7 +33,16 @@ class VoteSubmittedScreen extends StatelessWidget {
       vrn = generateVRN();
       sessionUser?['lastVRN'] = vrn;
     }
-    final voterName = args?['voterName'] ?? user['fullName'] ?? '';
+    final voterName = args?['voterName'] ?? (() {
+      final fName = user['FName'] ?? user['firstName'] ?? '';
+      final mName = user['MName'] ?? user['middleName'] ?? '';
+      final lName = user['LName'] ?? user['lastName'] ?? '';
+      String middleInitial = '';
+      if (mName.trim().isNotEmpty) {
+        middleInitial = ' ${mName.trim()[0]}.';
+      }
+      return '$fName$middleInitial $lName'.trim();
+    })() ?? '';
     return Center(
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),

@@ -61,21 +61,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       'BS Elementary Education',
       'Bachelor of Physical Education',
     ],
-    'CAS': [
-      'BS Psychology',
-      'BS Criminology',
-      'BS Development Communication',
-      'BA Communication',
-    ],
+    'CAS': ['BS Psychology', 'BS Criminology', 'BS Development Communication'],
     'CET': [
       'Bachelor of Automotive Engineering Technology',
       'Bachelor of Industrial Engineering Technology',
       'Bachelor of Computer Engineering Technology',
       'Bachelor of Drafting Engineering Technology',
       'Bachelor of Electrical Engineering Technology',
-      'Bachelor of Electronics Engineering Technology',
       'Bachelor of Food Engineering Technology',
-      'Bachelor of Mechanical Engineering Technology',
     ],
   };
 
@@ -302,7 +295,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // In a real app, this would open image picker
     // For now, we'll just simulate selecting an image
     setState(() {
-      _userImagePath = 'assets/images/profile_placeholder.png';
+      _userImagePath = 'assets/images/candidate_placeholder.png';
     });
   }
 
@@ -753,7 +746,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                user['fullName'] ?? 'No Name',
+                                (() {
+                                  final fName =
+                                      user['FName'] ?? user['firstName'] ?? '';
+                                  final mName =
+                                      user['MName'] ?? user['middleName'] ?? '';
+                                  final lName =
+                                      user['LName'] ?? user['lastName'] ?? '';
+                                  String middleInitial = '';
+                                  if (mName.trim().isNotEmpty) {
+                                    middleInitial = ' ${mName.trim()[0]}.';
+                                  }
+                                  final fullName = '$fName$middleInitial $lName'
+                                      .trim();
+                                  return fullName.isNotEmpty
+                                      ? fullName
+                                      : 'No Name';
+                                })(),
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 18,
