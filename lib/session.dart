@@ -88,7 +88,7 @@ List<Map<String, String>> predefinedUsers = [
   },
   {
     'gsuite': '22-68623@g.batstate-u.edu.ph',
-    'password': 'mjgalicio05',
+    'password': 'mjgalicio',
     'FName': 'Mark John',
     'MName': 'G',
     'LName': 'Galicio',

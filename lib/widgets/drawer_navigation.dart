@@ -111,11 +111,8 @@ class DrawerNavigation extends StatelessWidget {
             onTap: () {
               // Close the drawer first
               Navigator.of(context).pop();
-              // Then navigate to login screen, clearing the navigation stack
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                AppRouter.loginRoute,
-                (Route<dynamic> route) => false,
-              );
+              // Show confirmation dialog before logout
+              _showLogoutConfirmationDialog(context);
             },
           ),
         ],
@@ -146,6 +143,59 @@ class DrawerNavigation extends StatelessWidget {
               Navigator.of(context).pushNamed(routeName);
             }
           },
+    );
+  }
+
+  // Helper method to show logout confirmation dialog
+  void _showLogoutConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: AppColors.background,
+          title: Text(
+            'Confirm Logout',
+            style: AppTextStyles.titleMedium.copyWith(
+              color: AppColors.onBackground,
+            ),
+          ),
+          content: Text(
+            'Are you sure you want to logout?',
+            style: AppTextStyles.bodyMedium.copyWith(
+              color: AppColors.onBackground,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close dialog
+              },
+              child: Text(
+                'Cancel',
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: AppColors.primary,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close dialog
+                // Navigate to login screen, clearing the navigation stack
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  AppRouter.loginRoute,
+                  (Route<dynamic> route) => false,
+                );
+              },
+              child: Text(
+                'Logout',
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: AppColors.error,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

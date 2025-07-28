@@ -477,7 +477,7 @@ const List<Candidate> candidates = [
     course: 'BS Secondary Education',
     yearLevel: '4',
     srCode: '22-67671',
-    imageUrl: 'assets/images/candidates/Daniel.jpg',
+    imageUrl: 'assets/images/candidates/Catena.jpg',
   ),
   Candidate(
     id: 'P033',
